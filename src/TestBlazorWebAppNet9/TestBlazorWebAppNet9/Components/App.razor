@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
+    <base href="@PathBase" />
     <link rel="stylesheet" href="@Assets["lib/bootstrap/dist/css/bootstrap.min.css"]" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["TestBlazorWebAppNet9.styles.css"]" />
@@ -13,9 +13,29 @@
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
-<body>
+<body>    
     <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
 </body>
 
 </html>
+
+@code {
+    
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    string PathBase { get; set; } = "/";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        this.PathBase = HttpContext.Request.PathBase;
+
+        // Fix up for poorly formed PathBase. 
+        if (!this.PathBase.EndsWith("/"))
+        {
+            this.PathBase += "/";
+        }
+    }
+}

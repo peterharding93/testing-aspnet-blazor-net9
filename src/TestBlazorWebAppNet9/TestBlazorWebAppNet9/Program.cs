@@ -7,6 +7,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+app.UsePathBase("/app1/"); // New
+app.UseRouting(); // New
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
